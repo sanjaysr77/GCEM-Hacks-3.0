@@ -7,20 +7,20 @@ type LayoutProps = {
 
 export default function Layout({ children }: LayoutProps) {
   return (
-    <div className="app-container">
-      <header className="app-header">
-        <nav className="app-nav" style={{ display: 'flex', gap: 12 }}>
-          <Link to="/">Home</Link>
-          <Link to="/reports">Reports</Link>
-          <Link to="/upload">Upload</Link>
-          <Link to="/summary">Summary</Link>
+    <div className="min-h-screen flex flex-col">
+      <header className="sticky top-0 z-10 bg-white/70 backdrop-blur border-b">
+        <nav className="mx-auto max-w-5xl px-4 py-3 flex items-center gap-6 text-sm">
+          <Link className="font-medium hover:text-blue-600" to="/">Home</Link>
+          <Link className="font-medium hover:text-blue-600" to="/reports">Reports</Link>
+          <Link className="font-medium hover:text-blue-600" to="/upload">Upload</Link>
+          <Link className="font-medium hover:text-blue-600" to="/summary">Summary</Link>
         </nav>
       </header>
-      <main className="app-main">
+      <main className="flex-1 mx-auto w-full max-w-5xl px-4 py-6">
         {children}
         <Outlet />
       </main>
-      <footer className="app-footer">© {new Date().getFullYear()}</footer>
+      <footer className="border-t text-center text-xs text-slate-500 py-4">© {new Date().getFullYear()}</footer>
     </div>
   );
 }

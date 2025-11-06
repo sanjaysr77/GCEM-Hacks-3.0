@@ -8,7 +8,8 @@ type SummaryResponse = { textCorpus: string; healthMetrics: Record<string, strin
 
 export async function fetchReports(patientId: string): Promise<PatientReport[]> {
   try {
-    const { data } = await api.get<ReportsResponse>(`/api/reports/${encodeURIComponent(patientId)}`);
+    const pid = patientId.trim();
+    const { data } = await api.get<ReportsResponse>(`/api/reports/${encodeURIComponent(pid)}`);
     if (data?.status === 'success' && Array.isArray(data.reports)) return data.reports;
     throw new Error('Unexpected response while fetching reports');
   } catch (err: any) {
@@ -18,7 +19,8 @@ export async function fetchReports(patientId: string): Promise<PatientReport[]> 
 
 export async function fetchSummary(patientId: string): Promise<SummaryResponse> {
   try {
-    const { data } = await api.get<SummaryResponse>(`/api/reports/${encodeURIComponent(patientId)}/summary`);
+    const pid = patientId.trim();
+    const { data } = await api.get<SummaryResponse>(`/api/reports/${encodeURIComponent(pid)}/summary`);
     if (data && typeof data === 'object' && 'textCorpus' in data) return data;
     throw new Error('Unexpected response while fetching summary');
   } catch (err: any) {
@@ -31,10 +33,12 @@ export function useReports(
   options?: { enabled?: boolean; staleTime?: number }
 ): UseQueryResult<PatientReport[], Error> {
   return useQuery<PatientReport[], Error>({
-    queryKey: ['reports', patientId],
+    queryKey: ['reports', (patientId || '').trim()],
     queryFn: () => fetchReports(patientId),
     enabled: !!patientId && (options?.enabled ?? true),
-    staleTime: options?.staleTime ?? 5 * 60 * 1000,
+    staleTime: options?.staleTime ?? 0,
+    refetchOnMount: 'always',
+    refetchOnWindowFocus: true,
   });
 }
 
@@ -43,10 +47,12 @@ export function useReportsSummary(
   options?: { enabled?: boolean; staleTime?: number }
 ): UseQueryResult<SummaryResponse, Error> {
   return useQuery<SummaryResponse, Error>({
-    queryKey: ['reports', patientId, 'summary'],
+    queryKey: ['reports', (patientId || '').trim(), 'summary'],
     queryFn: () => fetchSummary(patientId),
     enabled: !!patientId && (options?.enabled ?? true),
-    staleTime: options?.staleTime ?? 5 * 60 * 1000,
+    staleTime: options?.staleTime ?? 0,
+    refetchOnMount: 'always',
+    refetchOnWindowFocus: true,
   });
 }
 
