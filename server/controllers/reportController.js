@@ -73,4 +73,57 @@ module.exports.uploadReport = async (req, res) => {
   }
 };
 
+module.exports.getReportsByPatient = async (req, res) => {
+  try {
+    const { patientId } = req.params;
+    if (!patientId) {
+      return res.status(400).json({ error: 'patientId is required' });
+    }
+
+    const reports = await PatientReport.find({ patientId }).sort({ uploadedAt: -1 });
+    return res.json({ status: 'success', reports });
+  } catch (err) {
+    return res.status(500).json({ error: 'Failed to fetch reports', details: err.message });
+  }
+};
+
+module.exports.getPatientSummary = async (req, res) => {
+  try {
+    const { patientId } = req.params;
+    if (!patientId) {
+      return res.status(400).json({ error: 'patientId is required' });
+    }
+
+    // Fetch all reports sorted by newest first
+    const reports = await PatientReport.find({ patientId }).sort({ uploadedAt: -1 });
+
+    // Build text corpus from diagnosisSummary + remarks across all reports
+    const parts = [];
+    for (const r of reports) {
+      const pd = r.parsedData || {};
+      if (pd.diagnosisSummary) parts.push(pd.diagnosisSummary);
+      if (pd.remarks) parts.push(pd.remarks);
+    }
+    const textCorpus = parts.join(' ');
+
+    // Latest health metrics by metric name
+    const healthMetrics = {};
+    const pickFirst = (getter) => {
+      for (const r of reports) {
+        const val = getter(r.parsedData || {});
+        if (val != null) return val;
+      }
+      return null;
+    };
+
+    healthMetrics.BP = pickFirst((pd) => pd.clinicalMetrics && pd.clinicalMetrics.BP ? pd.clinicalMetrics.BP.value : null);
+    healthMetrics.TSH = pickFirst((pd) => pd.clinicalMetrics && pd.clinicalMetrics.TSH ? pd.clinicalMetrics.TSH.value : null);
+    healthMetrics.HbA1c = pickFirst((pd) => pd.clinicalMetrics && pd.clinicalMetrics.HbA1c ? pd.clinicalMetrics.HbA1c.value : null);
+
+    return res.json({ textCorpus, healthMetrics });
+  } catch (err) {
+    return res.status(500).json({ error: 'Failed to build summary', details: err.message });
+  }
+};
+
 

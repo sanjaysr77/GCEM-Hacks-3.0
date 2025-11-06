@@ -2,7 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
-const { uploadReport } = require('../controllers/reportController');
+const { uploadReport, getReportsByPatient, getPatientSummary } = require('../controllers/reportController');
 
 const router = express.Router();
 
@@ -25,6 +25,10 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 router.post('/upload', upload.single('file'), uploadReport);
+
+router.get('/:patientId', getReportsByPatient);
+
+router.get('/:patientId/summary', getPatientSummary);
 
 module.exports = router;
 
