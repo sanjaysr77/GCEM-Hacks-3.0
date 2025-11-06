@@ -21,7 +21,11 @@ app.get('/health', (req, res) => {
 });
 
 // MongoDB connection
-const mongoUri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/gcem_hacks_db';
+const mongoUri = process.env.MONGO_URL;
+if (!mongoUri) {
+  console.error('MONGO_URL is not set. Please configure it in your .env');
+  process.exit(1);
+}
 
 mongoose
   .connect(mongoUri, {
