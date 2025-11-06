@@ -1,5 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { useUploadReport } from '@/hooks/useUploadReport';
 
 export default function UploadPage() {
@@ -23,37 +27,40 @@ export default function UploadPage() {
 
   return (
     <div className="grid gap-4">
-      <h1 className="text-2xl font-semibold">Upload Report</h1>
-      <form onSubmit={onSubmit} className="grid gap-3 max-w-md">
-        <input
-          className="block w-full text-sm text-slate-700 file:mr-4 file:rounded file:border-0 file:bg-blue-50 file:px-3 file:py-2 file:text-blue-700 border rounded px-3 py-2"
-          type="file"
-          accept="application/pdf"
-          onChange={(e) => setFile(e.target.files?.[0] || null)}
-        />
-        <input
-          className="border rounded px-3 py-2"
-          placeholder="Patient ID"
-          value={patientId}
-          onChange={(e) => setPatientId(e.target.value)}
-        />
-        <input
-          className="border rounded px-3 py-2"
-          placeholder="Hospital ID"
-          value={hospitalId}
-          onChange={(e) => setHospitalId(e.target.value)}
-        />
-        <button
-          className="px-4 py-2 rounded bg-blue-600 text-white disabled:opacity-50"
-          type="submit"
-          disabled={isPending || !file || !patientId || !hospitalId}
-        >
-          {isPending ? 'Uploading…' : 'Upload'}
-        </button>
-      </form>
-      {error && <p className="text-sm text-red-600">{(error as any).message}</p>}
+      <Card className="max-w-xl">
+        <CardHeader>
+          <CardTitle>Upload Report</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={onSubmit} className="grid gap-4">
+            <div className="grid gap-2">
+              <Label>PDF File</Label>
+              <Input type="file" accept="application/pdf" onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFile(e.target.files?.[0] || null)} />
+            </div>
+            <div className="grid gap-2">
+              <Label>Patient ID</Label>
+              <Input placeholder="PAT001" value={patientId} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPatientId(e.target.value)} />
+            </div>
+            <div className="grid gap-2">
+              <Label>Hospital ID</Label>
+              <Input placeholder="HSP001" value={hospitalId} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setHospitalId(e.target.value)} />
+            </div>
+            <Button type="submit" disabled={isPending || !file || !patientId || !hospitalId}>
+              {isPending ? 'Uploading…' : 'Upload'}
+            </Button>
+          </form>
+          {error && <p className="mt-3 text-sm text-red-600">{(error as any).message}</p>}
+        </CardContent>
+      </Card>
       {result && (
-        <pre className="bg-slate-50 p-3 rounded border overflow-auto">{JSON.stringify(result, null, 2)}</pre>
+        <Card className="max-w-xl">
+          <CardHeader>
+            <CardTitle>Uploaded</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <pre className="bg-slate-50 p-3 rounded border overflow-auto">{JSON.stringify(result, null, 2)}</pre>
+          </CardContent>
+        </Card>
       )}
     </div>
   );

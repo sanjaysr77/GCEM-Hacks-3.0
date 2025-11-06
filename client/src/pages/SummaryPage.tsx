@@ -1,6 +1,9 @@
 import { useMemo, useState } from 'react';
 import { useReportsSummary } from '@/hooks/useReports';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 export default function SummaryPage() {
   const [patientId, setPatientId] = useState('');
@@ -17,48 +20,64 @@ export default function SummaryPage() {
 
   return (
     <div className="grid gap-4">
-      <h1 className="text-2xl font-semibold">Summary</h1>
-      <div className="flex gap-2">
-        <input
-          className="border rounded px-3 py-2 w-64 focus:outline-none focus:ring focus:ring-blue-200"
-          placeholder="Enter patientId"
-          value={patientId}
-          onChange={(e) => setPatientId(e.target.value)}
-        />
-        <button className="px-3 py-2 rounded bg-blue-600 text-white disabled:opacity-50" disabled={!patientId}>Load</button>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Summary</CardTitle>
+        </CardHeader>
+        <CardContent className="flex gap-2 items-center">
+          <Input
+            className="w-64"
+            placeholder="Enter patientId"
+            value={patientId}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPatientId(e.target.value)}
+          />
+          <Button disabled={!patientId}>Load</Button>
+        </CardContent>
+      </Card>
       {isLoading && <p className="text-sm text-slate-500">Loading…</p>}
       {error && <p className="text-sm text-red-600">{error.message}</p>}
 
       {data && (
         <div className="grid gap-4">
-          <section className="grid gap-2">
-            <h2 className="text-lg font-medium">Text Corpus</h2>
-            <p className="whitespace-pre-wrap text-slate-700">{data.textCorpus || '—'}</p>
-          </section>
-          <section className="grid gap-2">
-            <h2 className="text-lg font-medium">Health Metrics (latest)</h2>
-            <ul className="grid gap-1">
-              {Object.entries(data.healthMetrics || {}).map(([k, v]) => (
-                <li key={k}><span className="font-medium">{k}:</span> {String(v)}</li>
-              ))}
-            </ul>
-          </section>
+          <Card>
+            <CardHeader>
+              <CardTitle>Text Corpus</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="whitespace-pre-wrap text-slate-700">{data.textCorpus || '—'}</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Health Metrics (latest)</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ul className="grid gap-1">
+                {Object.entries(data.healthMetrics || {}).map(([k, v]) => (
+                  <li key={k}><span className="font-medium">{k}:</span> {String(v)}</li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
           {chartData.length > 0 && (
-            <section className="grid gap-2">
-              <h2 className="text-lg font-medium">Key Metrics</h2>
-              <div className="w-full h-64">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={chartData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="metric" />
-                    <YAxis />
-                    <Tooltip />
-                    <Bar dataKey="value" fill="#2563eb" radius={[4, 4, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </section>
+            <Card>
+              <CardHeader>
+                <CardTitle>Key Metrics</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="w-full h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={chartData}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="metric" />
+                      <YAxis />
+                      <Tooltip />
+                      <Bar dataKey="value" fill="#2563eb" radius={[4, 4, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
           )}
         </div>
       )}
