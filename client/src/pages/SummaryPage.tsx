@@ -29,7 +29,7 @@ export default function SummaryPage() {
             className="w-64"
             placeholder="Enter patientId"
             value={patientId}
-            onChange={(e) => setPatientId(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPatientId(e.target.value)}
           />
           <Button disabled={!patientId}>Load</Button>
         </CardContent>

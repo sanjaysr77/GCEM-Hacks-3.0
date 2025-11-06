@@ -35,15 +35,15 @@ export default function UploadPage() {
           <form onSubmit={onSubmit} className="grid gap-4">
             <div className="grid gap-2">
               <Label>PDF File</Label>
-              <Input type="file" accept="application/pdf" onChange={(e) => setFile(e.target.files?.[0] || null)} />
+              <Input type="file" accept="application/pdf" onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFile(e.target.files?.[0] || null)} />
             </div>
             <div className="grid gap-2">
               <Label>Patient ID</Label>
-              <Input placeholder="PAT001" value={patientId} onChange={(e) => setPatientId(e.target.value)} />
+              <Input placeholder="PAT001" value={patientId} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPatientId(e.target.value)} />
             </div>
             <div className="grid gap-2">
               <Label>Hospital ID</Label>
-              <Input placeholder="HSP001" value={hospitalId} onChange={(e) => setHospitalId(e.target.value)} />
+              <Input placeholder="HSP001" value={hospitalId} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setHospitalId(e.target.value)} />
             </div>
             <Button type="submit" disabled={isPending || !file || !patientId || !hospitalId}>
               {isPending ? 'Uploading…' : 'Upload'}

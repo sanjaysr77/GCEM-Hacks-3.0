@@ -14,7 +14,7 @@ export default function Layout({ children }: LayoutProps) {
       <header className="sticky top-0 z-10 bg-white/80 backdrop-blur border-b">
         <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
           <Link to="/" className="inline-flex items-center gap-2 font-semibold">
-            <Activity className="h-5 w-5 text-blue-600" /> Dual Digital Twin
+            <Activity className="h-5 w-5 text-blue-600" /> Clinical Registry Secure System
           </Link>
           <nav className="flex items-center gap-2">
             <Button asChild variant="ghost"><Link to="/">Home</Link></Button>
