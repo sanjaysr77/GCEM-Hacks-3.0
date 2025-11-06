@@ -129,6 +129,21 @@ function GlowingDNAHelixWithShield() {
   );
 }
 
+function AboutSection() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Overview</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p>Leverages Generative AI and the Hedera Hashgraph blockchain to ensure secure, transparent, and intelligent management of medical records.
+Hospitals can upload encrypted clinical reports using secure patient identifiers, while Generative AI provides meaningful insights and summaries for improved understanding.
+Each report is verified through a cryptographic hash recorded on the blockchain, guaranteeing authenticity, immutability, and traceability—without ever exposing personal health information.</p>
+      </CardContent>
+    </Card>
+  );
+}
+
 export default function Home() {
   return (
     <div className="grid gap-4">
@@ -153,6 +168,7 @@ export default function Home() {
           </div>
         </CardContent>
       </Card>
+      <AboutSection />
     </div>
   );
 }
