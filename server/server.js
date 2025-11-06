@@ -27,9 +27,22 @@ if (!mongoUri) {
   process.exit(1);
 }
 
+// Work around invalid db names (e.g., containing '.')
+let dbNameOverride = process.env.MONGO_DB_NAME;
+if (!dbNameOverride) {
+  try {
+    const parsed = new URL(mongoUri);
+    const rawPath = (parsed.pathname || '').replace(/^\//, '');
+    if (rawPath) {
+      dbNameOverride = rawPath.replace(/\./g, '-');
+    }
+  } catch (_) {}
+}
+
 mongoose
   .connect(mongoUri, {
     serverSelectionTimeoutMS: 10000,
+    ...(dbNameOverride ? { dbName: dbNameOverride } : {}),
   })
   .then(() => {
     // Start server only after DB is connected
