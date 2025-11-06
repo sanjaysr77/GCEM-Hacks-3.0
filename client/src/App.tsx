@@ -1,16 +1,20 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 import Home from './pages/Home';
+import ReportsPage from './pages/ReportsPage';
+import SummaryPage from './pages/SummaryPage';
+import UploadPage from './pages/UploadPage';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route element={<Layout />}>
-          <Route index element={<Home />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <Routes>
+      <Route element={<Layout />}>
+        <Route index element={<Home />} />
+        <Route path="/reports" element={<ReportsPage />} />
+        <Route path="/summary" element={<SummaryPage />} />
+        <Route path="/upload" element={<UploadPage />} />
+      </Route>
+    </Routes>
   );
 }
 
