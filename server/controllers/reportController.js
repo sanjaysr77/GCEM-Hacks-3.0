@@ -3,6 +3,7 @@ const path = require('path');
 const crypto = require('crypto');
 const { Client, TopicMessageSubmitTransaction } = require('@hashgraph/sdk');
 const PatientReport = require('../models/PatientReport');
+const { parseReport } = require('../utils/parseReport');
 
 async function computeFileSha256(filePath) {
   return new Promise((resolve, reject) => {
@@ -52,13 +53,16 @@ module.exports.uploadReport = async (req, res) => {
       hederaTxId = txResponse.transactionId.toString();
     }
 
+    // Parse the uploaded report to populate parsedData (mocked)
+    const parsedData = await parseReport(uploadedFilePath);
+
     const record = new PatientReport({
       patientId,
       hospitalId,
       reportHash,
       hederaTxId,
       uploadedAt: new Date(),
-      parsedData: {},
+      parsedData,
     });
 
     const saved = await record.save();
